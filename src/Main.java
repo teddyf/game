@@ -52,6 +52,13 @@ public class Main extends Application{
 		scene = myGame.init(WIDTH, HEIGHT);
 		s.setScene(scene);
 		s.show();
+		
+		if(myGame.goToEndScreen.equals(null)==false){
+			myGame.goToEndScreen.setOnAction((event) -> {
+				endGame(s);
+			});
+		}
+		
 		KeyFrame frame = new KeyFrame(Duration.millis(DELAY_IN_MILLISECONDS),
 				e -> myGame.step(DELAY_IN_SECONDS));
 		Timeline animate = new Timeline();

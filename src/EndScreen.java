@@ -34,7 +34,14 @@ public class EndScreen {
 		backGroundImage.setFitWidth(800);
 		
 		//Sets end screen title
-		t.setText("You Died =(");
+		String message = new String();
+		if(score > 2000){
+			message = "Good Job!!!";
+		}
+		else{
+			message = "I know you can do better";
+		}
+		t.setText(message);
 		t.setFont(Font.font ("Verdana", 50));
 		t.setFill(Color.RED);
 		t.setLayoutX(0.0+width/2-150);

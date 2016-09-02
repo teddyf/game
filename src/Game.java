@@ -26,7 +26,7 @@ public class Game {
 	protected double enemyReflectSpeed = 1;
 	protected Score score;
 	
-	Button goToEndScreen;
+	Button goToEndScreen = new Button("You died!");
 
 	public Scene init(int width, int height) {
 
@@ -63,7 +63,9 @@ public class Game {
 	// Defines what occurs during each time stamp
 	public void step(double timeElapsed) {
 		
-		
+		if(isAlive()==false){
+			gameGraphics.getChildren().add(goToEndScreen);
+		}
 		score.setScore(score.getScore()+1);
 		//System.out.println(score.getScore());
 		//Adds wave of enemies to bored
