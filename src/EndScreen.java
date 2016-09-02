@@ -37,8 +37,8 @@ public class EndScreen {
 		t.setText("You Died =(");
 		t.setFont(Font.font ("Verdana", 50));
 		t.setFill(Color.RED);
-		t.setLayoutX(width/2-150);
-		t.setLayoutY(height/3);
+		t.setLayoutX(0.0+width/2-150);
+		t.setLayoutY(0.0+height/3);
 		
 		this.tryAgain = new Button("Try Again?");
 		tryAgain.setLayoutX(this.width/2-25);

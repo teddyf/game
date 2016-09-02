@@ -1,6 +1,7 @@
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -24,6 +25,8 @@ public class Game {
 	protected double playerReflectSpeed = 1.5;
 	protected double enemyReflectSpeed = 1;
 	protected Score score;
+	
+	Button goToEndScreen;
 
 	public Scene init(int width, int height) {
 
@@ -60,8 +63,9 @@ public class Game {
 	// Defines what occurs during each time stamp
 	public void step(double timeElapsed) {
 		
+		
 		score.setScore(score.getScore()+1);
-		System.out.println(score.getScore());
+		//System.out.println(score.getScore());
 		//Adds wave of enemies to bored
 		if (gameObjects.size() < 50) {
 			//WeakEnemy a = new WeakEnemy(0,0);
@@ -147,7 +151,7 @@ public class Game {
 	public boolean collision(double[] objBounds1, double[] objBounds2){
 		if(objBounds1[0] > objBounds2[0] && objBounds1[0] < objBounds2[1]){
 			if(objBounds1[2] > objBounds2[2] && objBounds1[2] < objBounds2[3]){
-				System.out.println("Collide!!!");
+				//System.out.println("Collide!!!");
 				return true;
 			}
 			return false;
@@ -159,6 +163,14 @@ public class Game {
 			return false;
 		}
 		return false;
+	}
+	
+	//Checks if player is alive
+	public boolean isAlive(){
+		if(this.player.getHealth() > 0){
+			return true;
+		}
+		else return false;
 	}
 	
 

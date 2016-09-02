@@ -58,7 +58,11 @@ public class Main extends Application{
 		animate.setCycleCount(Timeline.INDEFINITE);
 		animate.getKeyFrames().add(frame);
 		animate.play();
-		
+		/*
+		while(myGame.isAlive()==true){
+			System.out.println("It is alive!!!");
+		}
+		*/
 	}
 	
 	//Handles end scene animation
