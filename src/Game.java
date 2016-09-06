@@ -30,6 +30,7 @@ public class Game {
 	int scoreIncrement = 1;
 	ImageView backgrndView = new ImageView();
 	Button goToEndScreen = new Button("You died!");
+	protected double blasterSpeed = -400;
 
 	public Scene init(int width, int height) {
 
@@ -94,6 +95,16 @@ public class Game {
 		
 		if (gameStatus == 1){
 			asteroidRemovalAndCollision(timeElapsed);
+			BossEnemy drm1 = new BossEnemy((int)(Math.random()*200),0);
+			BossEnemy drm2 = new BossEnemy((int)(Math.random()*300+200),0);
+			BossEnemy drm3 = new BossEnemy((int)(Math.random()*600+200),0);
+			gameObjects.add(drm1);
+			gameObjects.add(drm2);
+			gameObjects.add(drm3);
+			gameGraphics.getChildren().add(drm1.getImage());
+			gameGraphics.getChildren().add(drm2.getImage());
+			gameGraphics.getChildren().add(drm3.getImage());
+			
 		}
 		
 		
@@ -131,24 +142,30 @@ public class Game {
 		switch (event) {
 		case D:
 			// System.out.println("right");
-			player.setVelX(player.getVelX() + 70);
+			player.setVelX(player.getVelX() + 100);
 			break;
 		case A:
 			// System.out.println("LEft");
-			player.setVelX(player.getVelX() - 70);
+			player.setVelX(player.getVelX() - 100);
 			break;
 		case W:
 			// System.out.println("up");
-			player.setVelY(player.getVelY() - 70);
+			player.setVelY(player.getVelY() - 100);
 			break;
 		case S:
 			// System.out.println("down");
-			player.setVelY(player.getVelY() + 70);
+			player.setVelY(player.getVelY() + 100);
 			break;
 		
 		case J:
 			player.setXResistance(1);
 			player.setYResistance(1);
+			
+		case SPACE:
+			Lazor shipLazor = new Lazor((int)(player.getPosX()-player.getWidth()),(int)(player.getPosY()-50));
+			shipLazor.setVelY(blasterSpeed);
+			gameGraphics.getChildren().add(shipLazor.getImage());
+			gameObjects.add(shipLazor);
 		default:
 			break;
 		}
@@ -216,6 +233,19 @@ public class Game {
 			//System.out.println(g.getBounds()[0] + ", " + g.getBounds()[1] + ", " + g.getBounds()[2] + ", " + g.getBounds()[3]);
 		}
 
+	}
+	
+	public void bossBattle(){
+		BossEnemy drm1 = new BossEnemy((int)(Math.random()*200),0);
+		BossEnemy drm2 = new BossEnemy((int)(Math.random()*300+200),0);
+		BossEnemy drm3 = new BossEnemy((int)(Math.random()*600+200),0);
+		gameObjects.add(drm1);
+		gameObjects.add(drm2);
+		gameObjects.add(drm3);
+		gameGraphics.getChildren().add(drm1.getImage());
+		gameGraphics.getChildren().add(drm2.getImage());
+		gameGraphics.getChildren().add(drm3.getImage());
+		
 	}
 	
 

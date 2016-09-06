@@ -7,24 +7,22 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-public class Player extends GameObject{
+public class Lazor extends GameObject{
 	
 	protected double xResistance;
 	protected double yResistance;
 	//Player constructor that sets initial position
-	public Player(int posX, int posY){
+	public Lazor(int posX, int posY){
 		super(posX, posY);
 		this.type = 0;
-		this.image = new Image("player.jpg");
+		this.image = new Image("upLazor.png");
 		this.imageView = new ImageView(image);
 		this.imageView.setFitHeight(20);
-		this.imageView.setFitWidth(20);
-		this.width = 20;
-		this.height = 20;
+		//this.imageView.preserveRatioProperty();
+		this.width = 10;
+		this.height = 100;
 		this.imageView.setX(posX-width/2);
 		this.imageView.setY(posY-height/2);
-		this.xResistance = .9;
-		this.yResistance = .9;
 	}
 	
 	//Defines behavior of player object for each time increment
@@ -33,8 +31,6 @@ public class Player extends GameObject{
 		posY = posY + velY*timeElapsed;
 		this.imageView.setX(posX-width/2);
 		this.imageView.setY(posY-height/2);
-		setVelX(velX*xResistance);
-		setVelY(velY*yResistance);
 		}
 	
 	//Returns bounds of an object in an array (x1,x2,y1,y2)
@@ -48,11 +44,4 @@ public class Player extends GameObject{
 		return this.type;
 	}
 	
-	public void setXResistance(double a){
-		this.xResistance = a;
-	}
-	
-	public void setYResistance(double a){
-		this.yResistance = a;
-	}
 }

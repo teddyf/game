@@ -8,11 +8,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.*;
 
-public class MediumEnemy extends GameObject {
+public class BossEnemy extends GameObject {
 
-	public MediumEnemy(int posX, int posY) {
+	public BossEnemy(int posX, int posY) {
 		super(posX, posY);
-		this.type = 1;
+		this.type = 3;
 	}
 
 	public void step(double timeElapsed) {
@@ -20,8 +20,18 @@ public class MediumEnemy extends GameObject {
 		//updates position of weak enemy object
 		posX += velX * timeElapsed;
 		posY += velY * timeElapsed;
+		this.image = new Image("Boss.png");
+		this.imageView = new ImageView(image);
+		this.imageView.setFitHeight(20);
+		//this.imageView.preserveRatioProperty();
+		this.width = 100;
+		this.height = 100;
+		this.imageView.setX(posX-width/2);
+		this.imageView.setY(posY-height/2);
 		
 		//animates position of object
+		this.imageView.setX(posX-width/2);
+		this.imageView.setY(posY-height/2);
 	}
 
 
