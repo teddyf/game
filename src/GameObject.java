@@ -12,7 +12,7 @@ public abstract class GameObject {
 	protected double height;
 	protected Image image;
 	protected ImageView imageView;
-	protected Shape shape;
+	//protected Shape shape;
 	
 	//Creates game object which sets initial position and health
 	public GameObject(int posX, int posY){

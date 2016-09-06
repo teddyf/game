@@ -22,12 +22,13 @@ public class Game {
 	ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 	public final static Image BACKGROUND_PICTURE = new Image("Space.jpg");
 	private HealthBar healthBar;
-	protected double playerReflectSpeed = 1.5;
+	protected double playerReflectSpeed = 1;
 	protected double enemyReflectSpeed = 1;
 	protected Score score;
 	int count = 0;
+	int gameStatus = 0;
 	int scoreIncrement = 1;
-	
+	ImageView backgrndView = new ImageView();
 	Button goToEndScreen = new Button("You died!");
 
 	public Scene init(int width, int height) {
@@ -37,7 +38,7 @@ public class Game {
 		this.height = height;
 
 		// Sets up wallpaper of game
-		ImageView backgrndView = new ImageView();
+		
 		backgrndView.setImage(BACKGROUND_PICTURE);
 		backgrndView.setFitHeight(600);
 		backgrndView.setFitWidth(800);
@@ -70,33 +71,36 @@ public class Game {
 			setScoreIncrement(0);
 			count++;
 		}
+		
+		if(score.getScore()%500 == 0 && score.getScore() > 0){
+			this.gameStatus = 1;
+		}
+		
 		score.setScore(score.getScore()+scoreIncrement);
 		//System.out.println(score.getScore());
 		//Adds wave of enemies to bored
-		if (gameObjects.size() < 50) {
+		
+		if (gameObjects.size() < 30 && gameStatus == 0) {
 			//WeakEnemy a = new WeakEnemy(0,0);
-			WeakEnemy a = new WeakEnemy((int) (Math.random() * 500), (int) (Math.random() * 500));
+			WeakEnemy a = new WeakEnemy((int) (Math.random() * 800),0);
 			if(collision(a.getBounds(), player.getBounds()) == false){
-				a.setVelX(Math.random() * 100);
-				a.setVelY(Math.random() * 100);
+				a.setVelX(Math.random() * 20);
+				a.setVelY(Math.random() * 400+200);
 				gameObjects.add(a);
-				gameGraphics.getChildren().add(a.getShape());
+				gameGraphics.getChildren().add(a.getImage());
 			}
 			
 		}
 		
+		if (gameStatus == 1){
+			asteroidRemovalAndCollision(timeElapsed);
+		}
+		
+		
 		double[] playerBounds = player.getBounds();
 		
 		double healthBefore = player.getHealth();
-		for (GameObject g : gameObjects) {
-			inBounds(g, 1);
-			double[] enemyBounds = g.getBounds();
-			if(collision(g.getBounds(),player.getBounds())==true){
-				player.setHealth(player.getHealth()-2);
-			}
-			g.step(timeElapsed);
-			//System.out.println(g.getBounds()[0] + ", " + g.getBounds()[1] + ", " + g.getBounds()[2] + ", " + g.getBounds()[3]);
-		}
+		asteroidRemovalAndCollision(timeElapsed);
 		inBounds(player, 1);
 		
 		//System.out.println(playerBounds[0] + " to " + playerBounds[1] + ", " + playerBounds[2] + " to " + playerBounds[3]);
@@ -107,14 +111,18 @@ public class Game {
 	}
 
 	// Handles object wall collisions
-	public void inBounds(GameObject g, double reflectionSpeed) {
+	public boolean inBounds(GameObject g, double reflectionSpeed) {
 		if (g.getPosX() > width || g.getPosX() < 0) {
 			g.setVelX(g.getVelX() * -1 * reflectionSpeed);
+			return false;
 		}
 
 		if (g.getPosY() > height || g.getPosY() < 0) {
 			g.setVelY(g.getVelY() * -1 * reflectionSpeed);
+			return false;
 		}
+		
+		return true;
 
 	}
 
@@ -164,10 +172,16 @@ public class Game {
 				//System.out.println("Collide!!!");
 				return true;
 			}
+			if(objBounds1[2] < objBounds2[0] && objBounds1[2] > objBounds2[3]){
+				return true;
+			}
 			return false;
 		}
 		else if(objBounds1[1]<objBounds2[1] && objBounds1[1]>objBounds2[0]){
 			if(objBounds1[3]<objBounds2[3] && objBounds1[3]>objBounds2[2]){
+				return true;
+			}
+			if(objBounds1[2] > objBounds2[3] && objBounds1[2]<objBounds2[3]){
 				return true;
 			}
 			return false;
@@ -185,6 +199,23 @@ public class Game {
 	
 	public void setScoreIncrement(int a){
 		this.scoreIncrement = a;
+	}
+	
+	public void asteroidRemovalAndCollision(double timeElapsed){
+		for (int i = 0; i < gameObjects.size(); i++) {
+			GameObject g = gameObjects.get(i);
+			if (inBounds(g, 1) == false){
+				gameGraphics.getChildren().remove(g.getImage());
+				gameObjects.remove(i);
+				System.out.println("Removed Object");
+			}
+			if(collision(g.getBounds(),player.getBounds())==true){
+				player.setHealth(player.getHealth()-2);
+			}
+			g.step(timeElapsed);
+			//System.out.println(g.getBounds()[0] + ", " + g.getBounds()[1] + ", " + g.getBounds()[2] + ", " + g.getBounds()[3]);
+		}
+
 	}
 	
 

@@ -8,19 +8,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.*;
 
-public class WeakEnemy extends GameObject {
+public class MediumEnemy extends GameObject {
 
-	public WeakEnemy(int posX, int posY) {
+	public MediumEnemy(int posX, int posY) {
 		super(posX, posY);
 		this.type = 1;
-		this.image = new Image("Asteroid.gif");
-		this.imageView = new ImageView(image);
-		this.imageView.setFitHeight(20);
-		this.imageView.setFitWidth(20);
-		this.width = 20;
-		this.height = 20;
-		this.imageView.setX(posX-width/2);
-		this.imageView.setY(posY-height/2);
 	}
 
 	public void step(double timeElapsed) {
@@ -30,8 +22,6 @@ public class WeakEnemy extends GameObject {
 		posY += velY * timeElapsed;
 		
 		//animates position of object
-		this.imageView.setX(posX-width/2);
-		this.imageView.setY(posY-height/2);
 	}
 
 
