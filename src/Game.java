@@ -25,6 +25,8 @@ public class Game {
 	protected double playerReflectSpeed = 1.5;
 	protected double enemyReflectSpeed = 1;
 	protected Score score;
+	int count = 0;
+	int scoreIncrement = 1;
 	
 	Button goToEndScreen = new Button("You died!");
 
@@ -63,10 +65,12 @@ public class Game {
 	// Defines what occurs during each time stamp
 	public void step(double timeElapsed) {
 		
-		if(isAlive()==false){
+		if(isAlive()==false & count == 0){
 			gameGraphics.getChildren().add(goToEndScreen);
+			setScoreIncrement(0);
+			count++;
 		}
-		score.setScore(score.getScore()+1);
+		score.setScore(score.getScore()+scoreIncrement);
 		//System.out.println(score.getScore());
 		//Adds wave of enemies to bored
 		if (gameObjects.size() < 50) {
@@ -93,7 +97,7 @@ public class Game {
 			g.step(timeElapsed);
 			//System.out.println(g.getBounds()[0] + ", " + g.getBounds()[1] + ", " + g.getBounds()[2] + ", " + g.getBounds()[3]);
 		}
-		inBounds(player, 1.5);
+		inBounds(player, 1);
 		
 		//System.out.println(playerBounds[0] + " to " + playerBounds[1] + ", " + playerBounds[2] + " to " + playerBounds[3]);
 		player.step(timeElapsed);
@@ -133,6 +137,10 @@ public class Game {
 			// System.out.println("down");
 			player.setVelY(player.getVelY() + 70);
 			break;
+		
+		case J:
+			player.setXResistance(1);
+			player.setYResistance(1);
 		default:
 			break;
 		}
@@ -173,6 +181,10 @@ public class Game {
 			return true;
 		}
 		else return false;
+	}
+	
+	public void setScoreIncrement(int a){
+		this.scoreIncrement = a;
 	}
 	
 
