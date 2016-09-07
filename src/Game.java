@@ -40,7 +40,6 @@ public class Game {
 		this.height = height;
 
 		// Sets up wallpaper of game
-		
 		backgrndView.setImage(BACKGROUND_PICTURE);
 		backgrndView.setFitHeight(600);
 		backgrndView.setFitWidth(800);
@@ -51,14 +50,8 @@ public class Game {
 		myScene = new Scene(this.gameGraphics, width, height, Color.BLACK);
 		playerImage = player.getImage();
 		gameGraphics.getChildren().add(playerImage);
-
-		// Sets up health bar
-		this.healthBar = new HealthBar(20, width);
-		gameGraphics.getChildren().add(healthBar.getShape());
-
-		score = new Score(0,width-150,height-50);
-		gameGraphics.getChildren().add(score.getText());
 		
+		hud();
 		
 		// Handles Keyboard control
 		myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
@@ -80,7 +73,7 @@ public class Game {
 			gameObjects.add(drm1);		
 			gameGraphics.getChildren().add(drm1.getImage());
 			
-			
+			asteroidRemovalAndCollision(timeElapsed);
 			this.gameStatus = 1;
 		}
 		
@@ -102,7 +95,7 @@ public class Game {
 		
 		if (gameStatus == 1){
 			//System.out.println("here");
-			asteroidRemovalAndCollision(timeElapsed);
+			inBounds(drm1,enemyReflectSpeed);
 			for(int i = 0; i < gameObjects.size();i++){
 				GameObject g = gameObjects.get(i);
 				g.step(timeElapsed);
@@ -284,6 +277,16 @@ public class Game {
 		lazor.setVelY(direction*blasterSpeed);
 		gameGraphics.getChildren().add(lazor.getImage());
 		gameObjects.add(lazor);
+	}
+	
+	public void hud(){
+		// Sets up health bar
+		this.healthBar = new HealthBar(20, width);
+		gameGraphics.getChildren().add(healthBar.getShape());
+
+		// Puts score on screen
+		score = new Score(0,width-150,height-50);
+		gameGraphics.getChildren().add(score.getText());
 	}
 	
 
