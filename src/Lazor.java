@@ -14,7 +14,7 @@ public class Lazor extends GameObject{
 	//Player constructor that sets initial position
 	public Lazor(int posX, int posY){
 		super(posX, posY);
-		this.type = 0;
+		this.type = 2;
 		this.image = new Image("upLazor.png");
 		this.imageView = new ImageView(image);
 		this.imageView.setFitHeight(20);

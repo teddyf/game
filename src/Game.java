@@ -31,6 +31,7 @@ public class Game {
 	ImageView backgrndView = new ImageView();
 	Button goToEndScreen = new Button("You died!");
 	protected double blasterSpeed = -400;
+	BossEnemy drm1;
 
 	public Scene init(int width, int height) {
 
@@ -73,7 +74,13 @@ public class Game {
 			count++;
 		}
 		
-		if(score.getScore()%500 == 0 && score.getScore() > 0){
+		if(score.getScore() == 500){
+			drm1 = new BossEnemy(width/2,250);
+			drm1.setVelX(50);
+			gameObjects.add(drm1);		
+			gameGraphics.getChildren().add(drm1.getImage());
+			
+			
 			this.gameStatus = 1;
 		}
 		
@@ -94,21 +101,53 @@ public class Game {
 		}
 		
 		if (gameStatus == 1){
+			//System.out.println("here");
 			asteroidRemovalAndCollision(timeElapsed);
-			BossEnemy drm1 = new BossEnemy((int)(Math.random()*200),0);
-			BossEnemy drm2 = new BossEnemy((int)(Math.random()*300+200),0);
-			BossEnemy drm3 = new BossEnemy((int)(Math.random()*600+200),0);
-			gameObjects.add(drm1);
-			gameObjects.add(drm2);
-			gameObjects.add(drm3);
-			gameGraphics.getChildren().add(drm1.getImage());
-			gameGraphics.getChildren().add(drm2.getImage());
-			gameGraphics.getChildren().add(drm3.getImage());
+			for(int i = 0; i < gameObjects.size();i++){
+				GameObject g = gameObjects.get(i);
+				g.step(timeElapsed);
+				inBounds(g, enemyReflectSpeed);
+				if(g.getType()!=3){
+					//System.out.println("fire" + g.getBounds()[0] + ", " + g.getBounds()[1] + ": " + g.getBounds()[2] + ", " + g.getBounds()[3]);
+				}
+				//System.out.println("alien" + drm1.getBounds()[0]+ ", " + drm1.getBounds()[1] + ": " + drm1.getBounds()[2] + ", " + drm1.getBounds()[3]);
+				if(collision(g.getBounds(),drm1.getBounds()) && g.getType()==2){
+					System.out.println(drm1.getHealth());
+					drm1.setHealth(drm1.getHealth()-.1);
+				}
+				
+				if(drm1.getHealth() <= 0){
+					gameGraphics.getChildren().remove(drm1.getImage());
+				}
+				
+				/*
+				if(gameObjects.get(i).getType()==3){
+					if(gameObjects.get(i).getHealth() <= 0){
+						gameGraphics.getChildren().remove(gameObjects.get(i));
+						gameObjects.remove(i);
+						System.out.println("death to DRM!!!");
+					}
+					
+					if(collision(player.getBounds(),gameObjects.get(i).getBounds())){
+						gameObjects.get(i).setHealth(gameObjects.get(i).getHealth()-10);
+						System.out.println("Take that drm!!!");
+					}
+					if(score.getScore()%50 == 0){
+						System.out.println("shots fired");
+						shoot(gameObjects.get(i),-1);
+					}
+				}
+				*/
+				
+			}
+			if(score.getScore()%30==0){
+				shoot(drm1,-1);
+			}
+			
+			
 			
 		}
 		
-		
-		double[] playerBounds = player.getBounds();
 		
 		double healthBefore = player.getHealth();
 		asteroidRemovalAndCollision(timeElapsed);
@@ -125,6 +164,7 @@ public class Game {
 	public boolean inBounds(GameObject g, double reflectionSpeed) {
 		if (g.getPosX() > width || g.getPosX() < 0) {
 			g.setVelX(g.getVelX() * -1 * reflectionSpeed);
+			//System.out.println("edge");
 			return false;
 		}
 
@@ -162,10 +202,7 @@ public class Game {
 			player.setYResistance(1);
 			
 		case SPACE:
-			Lazor shipLazor = new Lazor((int)(player.getPosX()-player.getWidth()),(int)(player.getPosY()-50));
-			shipLazor.setVelY(blasterSpeed);
-			gameGraphics.getChildren().add(shipLazor.getImage());
-			gameObjects.add(shipLazor);
+			shoot(player,1);
 		default:
 			break;
 		}
@@ -190,15 +227,19 @@ public class Game {
 				return true;
 			}
 			if(objBounds1[2] < objBounds2[0] && objBounds1[2] > objBounds2[3]){
+				//System.out.println("Collide!!!");
 				return true;
+				
 			}
 			return false;
 		}
 		else if(objBounds1[1]<objBounds2[1] && objBounds1[1]>objBounds2[0]){
 			if(objBounds1[3]<objBounds2[3] && objBounds1[3]>objBounds2[2]){
+				//System.out.println("Collide!!!");
 				return true;
 			}
 			if(objBounds1[2] > objBounds2[3] && objBounds1[2]<objBounds2[3]){
+				//System.out.println("Collide!!!");
 				return true;
 			}
 			return false;
@@ -221,13 +262,15 @@ public class Game {
 	public void asteroidRemovalAndCollision(double timeElapsed){
 		for (int i = 0; i < gameObjects.size(); i++) {
 			GameObject g = gameObjects.get(i);
-			if (inBounds(g, 1) == false){
+			if (inBounds(g, 1) == false && (g.getType()==1 || g.getType()==2)){
 				gameGraphics.getChildren().remove(g.getImage());
 				gameObjects.remove(i);
-				System.out.println("Removed Object");
+				//System.out.println("Removed Object");
 			}
 			if(collision(g.getBounds(),player.getBounds())==true){
-				player.setHealth(player.getHealth()-2);
+				if(g.getType() == 1){
+					player.setHealth(player.getHealth()-2);
+				}
 			}
 			g.step(timeElapsed);
 			//System.out.println(g.getBounds()[0] + ", " + g.getBounds()[1] + ", " + g.getBounds()[2] + ", " + g.getBounds()[3]);
@@ -235,17 +278,12 @@ public class Game {
 
 	}
 	
-	public void bossBattle(){
-		BossEnemy drm1 = new BossEnemy((int)(Math.random()*200),0);
-		BossEnemy drm2 = new BossEnemy((int)(Math.random()*300+200),0);
-		BossEnemy drm3 = new BossEnemy((int)(Math.random()*600+200),0);
-		gameObjects.add(drm1);
-		gameObjects.add(drm2);
-		gameObjects.add(drm3);
-		gameGraphics.getChildren().add(drm1.getImage());
-		gameGraphics.getChildren().add(drm2.getImage());
-		gameGraphics.getChildren().add(drm3.getImage());
-		
+	
+	public void shoot(GameObject g, int direction){
+		Lazor lazor = new Lazor((int)(g.getPosX()),(int)(g.getPosY())+40);
+		lazor.setVelY(direction*blasterSpeed);
+		gameGraphics.getChildren().add(lazor.getImage());
+		gameObjects.add(lazor);
 	}
 	
 

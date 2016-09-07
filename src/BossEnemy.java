@@ -13,6 +13,15 @@ public class BossEnemy extends GameObject {
 	public BossEnemy(int posX, int posY) {
 		super(posX, posY);
 		this.type = 3;
+		this.image = new Image("Boss.png");
+		this.imageView = new ImageView(image);
+		this.imageView.setFitHeight(300);
+		this.imageView.setFitWidth(300);
+		this.imageView.setX(posX-width/2);
+		this.imageView.setY(posY-height/2);
+		this.width = 300;
+		this.height = 300;
+		
 	}
 
 	public void step(double timeElapsed) {
@@ -20,14 +29,8 @@ public class BossEnemy extends GameObject {
 		//updates position of weak enemy object
 		posX += velX * timeElapsed;
 		posY += velY * timeElapsed;
-		this.image = new Image("Boss.png");
-		this.imageView = new ImageView(image);
-		this.imageView.setFitHeight(20);
+		
 		//this.imageView.preserveRatioProperty();
-		this.width = 100;
-		this.height = 100;
-		this.imageView.setX(posX-width/2);
-		this.imageView.setY(posY-height/2);
 		
 		//animates position of object
 		this.imageView.setX(posX-width/2);

@@ -15,7 +15,7 @@ public class Player extends GameObject{
 	public Player(int posX, int posY){
 		super(posX, posY);
 		this.type = 0;
-		this.image = new Image("player.jpg");
+		this.image = new Image("playerSprite.png");
 		this.imageView = new ImageView(image);
 		this.imageView.setFitHeight(20);
 		this.imageView.setFitWidth(20);
