@@ -59,6 +59,10 @@ public class Game {
 	}
 
 	// Defines what occurs during each time stamp
+	/**
+	 * Defines what occurs during each time step of the game
+	 * @param timeElapsed
+	 */
 	public void step(double timeElapsed) {
 		
 		if(isAlive()==false & count == 0){
@@ -78,67 +82,25 @@ public class Game {
 		}
 		
 		score.setScore(score.getScore()+scoreIncrement);
-		//System.out.println(score.getScore());
-		//Adds wave of enemies to bored
 		
-		if (gameObjects.size() < 30 && gameStatus == 0) {
-			//WeakEnemy a = new WeakEnemy(0,0);
-			WeakEnemy a = new WeakEnemy((int) (Math.random() * 800),0);
-			if(collision(a.getBounds(), player.getBounds()) == false){
-				a.setVelX(Math.random() * 20);
-				a.setVelY(Math.random() * 400+200);
-				gameObjects.add(a);
-				gameGraphics.getChildren().add(a.getImage());
-			}
-			
-		}
+		//Spawns asteroids
+		asteroidSpawn();
 		
+		//Move on to boss fight
 		if (gameStatus == 1){
-			//System.out.println("here");
 			inBounds(drm1,enemyReflectSpeed);
 			for(int i = 0; i < gameObjects.size();i++){
 				GameObject g = gameObjects.get(i);
 				g.step(timeElapsed);
 				inBounds(g, enemyReflectSpeed);
-				if(g.getType()!=3){
-					//System.out.println("fire" + g.getBounds()[0] + ", " + g.getBounds()[1] + ": " + g.getBounds()[2] + ", " + g.getBounds()[3]);
-				}
-				//System.out.println("alien" + drm1.getBounds()[0]+ ", " + drm1.getBounds()[1] + ": " + drm1.getBounds()[2] + ", " + drm1.getBounds()[3]);
-				if(collision(g.getBounds(),drm1.getBounds()) && g.getType()==2){
-					System.out.println(drm1.getHealth());
-					drm1.setHealth(drm1.getHealth()-.1);
-				}
-				
+				damageGameObject(g,drm1,.1);
 				if(drm1.getHealth() <= 0){
 					gameGraphics.getChildren().remove(drm1.getImage());
-				}
-				
-				/*
-				if(gameObjects.get(i).getType()==3){
-					if(gameObjects.get(i).getHealth() <= 0){
-						gameGraphics.getChildren().remove(gameObjects.get(i));
-						gameObjects.remove(i);
-						System.out.println("death to DRM!!!");
-					}
-					
-					if(collision(player.getBounds(),gameObjects.get(i).getBounds())){
-						gameObjects.get(i).setHealth(gameObjects.get(i).getHealth()-10);
-						System.out.println("Take that drm!!!");
-					}
-					if(score.getScore()%50 == 0){
-						System.out.println("shots fired");
-						shoot(gameObjects.get(i),-1);
-					}
-				}
-				*/
-				
+				}	
 			}
-			if(score.getScore()%30==0){
+			if(score.getScore()%30==0 && drm1.isAlive()){
 				shoot(drm1,-1);
 			}
-			
-			
-			
 		}
 		
 		
@@ -154,6 +116,13 @@ public class Game {
 	}
 
 	// Handles object wall collisions
+	/**
+	 * Checks to see if game object g is within the bounds of the world.  If not, the speed of the object is multiplied by -1 in order to
+	 * reflect it off the walls
+	 * @param g (game object that is checked)
+	 * @param reflectionSpeed (speed to be multiplied by when object encounters wall)
+	 * @return
+	 */
 	public boolean inBounds(GameObject g, double reflectionSpeed) {
 		if (g.getPosX() > width || g.getPosX() < 0) {
 			g.setVelX(g.getVelX() * -1 * reflectionSpeed);
@@ -170,6 +139,10 @@ public class Game {
 
 	}
 
+	/**
+	 * Maps keys to events and includes cheat codes
+	 * @param event
+	 */
 	public void handleKeyInput(KeyCode event) {
 
 		switch (event) {
@@ -203,16 +176,30 @@ public class Game {
 	}
 	
 	//Edits speed of player when reflected off of a wall (cheat code)
+	/**
+	 * Sets up the reflect speed when a player encounters a wall
+	 * @param speed
+	 */
 	public void setPlayerReflectSpeed(double speed){
 		this.playerReflectSpeed = speed;
 	}
 	
 	//Edits speed of player when reflected off of a wall (cheat code)
+	/**
+	 * Edits enemy reflect speed
+	 * @param speed
+	 */
 	public void setEnemyReflectSpeed(double speed){
 		this.enemyReflectSpeed = speed;
 	}
 	
 	//Detects any collisions between game objects
+	/**
+	 * Checks if the game objects are intersecting or not 
+	 * @param objBounds1 (defines hit box of object 1 in the format: x1,x2,y1,y2)
+	 * @param objBounds2 (defines hit box of object 2)
+	 * @return
+	 */
 	public boolean collision(double[] objBounds1, double[] objBounds2){
 		if(objBounds1[0] > objBounds2[0] && objBounds1[0] < objBounds2[1]){
 			if(objBounds1[2] > objBounds2[2] && objBounds1[2] < objBounds2[3]){
@@ -241,6 +228,10 @@ public class Game {
 	}
 	
 	//Checks if player is alive
+	/**
+	 * Checks to see if player has health
+	 * @return True if player ha health, False if not
+	 */
 	public boolean isAlive(){
 		if(this.player.getHealth() > 0){
 			return true;
@@ -248,30 +239,35 @@ public class Game {
 		else return false;
 	}
 	
+	/**
+	 * Sets score increment in game
+	 * @param a :score to be added if survived a step
+	 */
 	public void setScoreIncrement(int a){
 		this.scoreIncrement = a;
 	}
 	
+	/**
+	 * Removes asteroids if they leave the map
+	 * @param timeElapsed
+	 */
 	public void asteroidRemovalAndCollision(double timeElapsed){
 		for (int i = 0; i < gameObjects.size(); i++) {
 			GameObject g = gameObjects.get(i);
 			if (inBounds(g, 1) == false && (g.getType()==1 || g.getType()==2)){
-				gameGraphics.getChildren().remove(g.getImage());
-				gameObjects.remove(i);
-				//System.out.println("Removed Object");
+				remove(g,i);
 			}
-			if(collision(g.getBounds(),player.getBounds())==true){
-				if(g.getType() == 1){
-					player.setHealth(player.getHealth()-2);
-				}
-			}
+			damageGameObject(g,player,2);
 			g.step(timeElapsed);
-			//System.out.println(g.getBounds()[0] + ", " + g.getBounds()[1] + ", " + g.getBounds()[2] + ", " + g.getBounds()[3]);
 		}
 
 	}
 	
-	
+	/**
+	 * Sets up projectile firing for player and enemies
+	 * @param g
+	 * @param direction
+	 */
 	public void shoot(GameObject g, int direction){
 		Lazor lazor = new Lazor((int)(g.getPosX()),(int)(g.getPosY())+40);
 		lazor.setVelY(direction*blasterSpeed);
@@ -279,6 +275,9 @@ public class Game {
 		gameObjects.add(lazor);
 	}
 	
+	/**
+	 * Sets up the HUD for the games
+	 */
 	public void hud(){
 		// Sets up health bar
 		this.healthBar = new HealthBar(20, width);
@@ -287,6 +286,46 @@ public class Game {
 		// Puts score on screen
 		score = new Score(0,width-150,height-50);
 		gameGraphics.getChildren().add(score.getText());
+	}
+	
+	/**
+	 * Removes game objects from object list and stops rendering it
+	 * @param g
+	 * @param index
+	 */
+	public void remove(GameObject g, int index){
+		gameGraphics.getChildren().remove(g.getImage());
+		gameObjects.remove(index);
+	}
+	
+	/**
+	 * Damages object as called
+	 * @param a: Gameobject possibly inflicting the object
+	 * @param b: Gameobject geing damaged
+	 * @param amount: Amount by which the object is damaged
+	 */
+	public void damageGameObject(GameObject a, GameObject b,double amount){
+		if(collision(a.getBounds(),b.getBounds())==true){
+			if(a.getType() == 1 || a.getType()==2){
+				b.setHealth(b.getHealth()-amount);
+			}
+		}
+	}
+	
+	/**
+	 * Spawns asteroids, sets speeds
+	 */
+	public void asteroidSpawn(){
+		if (gameObjects.size() < 30 && gameStatus == 0) {
+			//WeakEnemy a = new WeakEnemy(0,0);
+			WeakEnemy a = new WeakEnemy((int) (Math.random() * 800),0);
+			if(collision(a.getBounds(), player.getBounds()) == false){
+				a.setVelX(Math.random() * 20);
+				a.setVelY(Math.random() * 400+200);
+				gameObjects.add(a);
+				gameGraphics.getChildren().add(a.getImage());
+			}
+		}
 	}
 	
 

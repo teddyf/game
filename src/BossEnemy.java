@@ -47,4 +47,13 @@ public class BossEnemy extends GameObject {
 	public int getType(){
 		return this.type;
 	}
+	
+	public boolean isAlive(){
+		if(getHealth()>0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 }
