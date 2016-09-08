@@ -33,6 +33,12 @@ public class Game {
 	protected double blasterSpeed = -400;
 	BossEnemy drm1;
 
+	/**
+	 * Initializes Scene in the game
+	 * @param width: width of scene
+	 * @param height: height of scene
+	 * @return :Returns scene to be called in main 
+	 */
 	public Scene init(int width, int height) {
 
 		// Sets field dimensions
@@ -193,7 +199,6 @@ public class Game {
 		this.enemyReflectSpeed = speed;
 	}
 	
-	//Detects any collisions between game objects
 	/**
 	 * Checks if the game objects are intersecting or not 
 	 * @param objBounds1 (defines hit box of object 1 in the format: x1,x2,y1,y2)
