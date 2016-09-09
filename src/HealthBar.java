@@ -48,7 +48,6 @@ public class HealthBar {
 	public void step(double healthLossFraction){
 		posX -= healthLossFraction*width;
 		this.shape.setLayoutX(posX);
-		//System.out.println(healthLossFraction);
 	}
 
 	public double getPosX() {

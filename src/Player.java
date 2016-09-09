@@ -16,8 +16,8 @@ public class Player extends GameObject{
 		this.height = 20;
 		this.imageView.setX(posX-width/2);
 		this.imageView.setY(posY-height/2);
-		this.xResistance = .9;
-		this.yResistance = .9;
+		this.xResistance = 1;
+		this.yResistance = 1;
 	}
 	
 	public void step(double timeElapsed){

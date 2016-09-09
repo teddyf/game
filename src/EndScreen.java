@@ -17,6 +17,7 @@ public class EndScreen {
 	ImageView backgrndImage;
 	Button tryAgain;
 	int score;
+	private int WIN_LOSS_THRESHOLD = 5000;
 	
 	volatile boolean exitMenu;
 	
@@ -35,11 +36,11 @@ public class EndScreen {
 		
 		//Sets end screen title
 		String message = new String();
-		if(score > 2000){
+		if(score > WIN_LOSS_THRESHOLD){
 			message = "Good Job!!!";
 		}
 		else{
-			message = "I know you can do better";
+			message = "You Lost!!!";
 		}
 		t.setText(message);
 		t.setFont(Font.font ("Verdana", 50));

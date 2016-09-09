@@ -10,23 +10,35 @@ import java.util.*;
 public class Game {
 	protected int width;
 	protected int height;
+	public final static Image BACKGROUND_PICTURE = new Image("Space.jpg");
 	private Scene myScene;
+	protected ImageView backgrndView = new ImageView();
+	
 	private Player player;
+	private BossEnemy drm1;
 	private ImageView playerImage;
 	private Group gameGraphics = new Group();
-	protected ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
-	public final static Image BACKGROUND_PICTURE = new Image("Space.jpg");
 	private HealthBar healthBar;
+	protected ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+	
 	protected double playerReflectSpeed = 1;
 	protected double enemyReflectSpeed = 1;
 	protected Score score;
 	protected int count = 0;
 	protected int gameStatus = 0;
 	protected int scoreIncrement = 1;
-	protected ImageView backgrndView = new ImageView();
-	protected Button goToEndScreen = new Button("You died!");
+	protected Button goToEndScreen = new Button("Game Over");
 	protected double blasterSpeed = -400;
-	BossEnemy drm1;
+	
+	private int BOSS_VERT_SPAWN = 250;
+	private int BOSS_HORIZ_SPEED = 50;
+	private int BOSS_BONUS = 10000;
+	private int ADVANCING_SCORE = 1000;
+	
+	private int SCORE_WIDTH_SHIFT = 200;
+	private int SCORE_HEIGHT_SHIFT = 50;
+	
+	private int justDied = 0;
 
 	/**
 	 * Initializes Scene in the game
@@ -71,9 +83,9 @@ public class Game {
 			count++;
 		}
 
-		if (score.getScore() == 1000) {
-			drm1 = new BossEnemy(width / 2, 250);
-			drm1.setVelX(50);
+		if (score.getScore() == ADVANCING_SCORE) {
+			drm1 = new BossEnemy(width / 2, BOSS_VERT_SPAWN);
+			drm1.setVelX(BOSS_HORIZ_SPEED);
 			gameObjects.add(drm1);
 			gameGraphics.getChildren().add(drm1.getImage());
 
@@ -92,9 +104,13 @@ public class Game {
 				inBounds(g, enemyReflectSpeed);
 				damageGameObject(g, drm1, .1);
 				if (drm1.getHealth() <= 0) {
-					score.setScore(score.getScore()+10000*this.scoreIncrement);
+					score.setScore(score.getScore()+BOSS_BONUS*this.scoreIncrement);
 					gameGraphics.getChildren().remove(drm1.getImage());
 					setScoreIncrement(0);
+					if(justDied == 0){
+						justDied++;
+						gameGraphics.getChildren().add(goToEndScreen);
+					}
 				}
 			}
 			if (score.getScore() % 30 == 0 && drm1.isAlive()) {
@@ -156,14 +172,15 @@ public class Game {
 			player.setVelY(player.getVelY() + 100);
 			break;
 		case J:
-			player.setXResistance(1);
-			player.setYResistance(1);
+			player.setXResistance(.9);
+			player.setYResistance(.9);
 			break;
 		case SPACE:
 			shoot(player, 1);
 			break;
 		case K:
-			skipToBoss();
+			player.setXResistance(1);
+			player.setYResistance(1);
 		default:
 			break;
 		}
@@ -264,7 +281,7 @@ public class Game {
 	 * @param direction
 	 */
 	private void shoot(GameObject g, int direction) {
-		Lazor lazor = new Lazor((int) (g.getPosX()), (int) (g.getPosY()) + 40);
+		Lazor lazor = new Lazor((int) (g.getPosX()), (int) (g.getPosY()));
 		lazor.setVelY(direction * blasterSpeed);
 		gameGraphics.getChildren().add(lazor.getImage());
 		gameObjects.add(lazor);
@@ -277,7 +294,7 @@ public class Game {
 		this.healthBar = new HealthBar(20, width);
 		gameGraphics.getChildren().add(healthBar.getShape());
 
-		score = new Score(0, width - 150, height - 50);
+		score = new Score(0, width - SCORE_WIDTH_SHIFT, height - SCORE_HEIGHT_SHIFT);
 		gameGraphics.getChildren().add(score.getText());
 	}
 
