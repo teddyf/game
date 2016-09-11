@@ -13,14 +13,14 @@ public class Game {
 	public final static Image BACKGROUND_PICTURE = new Image("Space.jpg");
 	private Scene myScene;
 	protected ImageView backgrndView = new ImageView();
-	
+
 	private Player player;
 	private BossEnemy drm1;
 	private ImageView playerImage;
 	private Group gameGraphics = new Group();
 	private HealthBar healthBar;
 	protected ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
-	
+
 	protected double playerReflectSpeed = 1;
 	protected double enemyReflectSpeed = 1;
 	protected Score score;
@@ -29,15 +29,15 @@ public class Game {
 	protected int scoreIncrement = 1;
 	protected Button goToEndScreen = new Button("Game Over");
 	protected double blasterSpeed = -400;
-	
+
 	private int BOSS_VERT_SPAWN = 250;
 	private int BOSS_HORIZ_SPEED = 50;
 	private int BOSS_BONUS = 10000;
 	private int ADVANCING_SCORE = 1000;
-	
+
 	private int SCORE_WIDTH_SHIFT = 200;
 	private int SCORE_HEIGHT_SHIFT = 50;
-	
+
 	private int justDied = 0;
 
 	/**
@@ -73,7 +73,8 @@ public class Game {
 	/**
 	 * Defines what occurs during each time step of the game
 	 * 
-	 * @param timeElapsed: time between steps
+	 * @param timeElapsed:
+	 *            time between steps
 	 */
 	public void step(double timeElapsed) {
 
@@ -93,49 +94,17 @@ public class Game {
 			this.gameStatus = 1;
 		}
 
-		score.setScore(score.getScore() + scoreIncrement);
+		healthBarUpdate();
+		
 		asteroidSpawn();
-
-		if (gameStatus == 1) {
-			inBounds(drm1, enemyReflectSpeed);
-			for (int i = 0; i < gameObjects.size(); i++) {
-				GameObject g = gameObjects.get(i);
-				g.step(timeElapsed);
-				inBounds(g, enemyReflectSpeed);
-				damageGameObject(g, drm1, .1);
-				if (drm1.getHealth() <= 0) {
-					score.setScore(score.getScore()+BOSS_BONUS*this.scoreIncrement);
-					gameGraphics.getChildren().remove(drm1.getImage());
-					setScoreIncrement(0);
-					if(justDied == 0){
-						justDied++;
-						gameGraphics.getChildren().add(goToEndScreen);
-					}
-				}
-			}
-			if (score.getScore() % 30 == 0 && drm1.isAlive()) {
-				shoot(drm1, -1);
-			}
-		}
-
-		double healthBefore = player.getHealth();
+		bossLevel(timeElapsed);
 		asteroidRemovalAndCollision(timeElapsed);
+		
 		inBounds(player, 1);
 		player.step(timeElapsed);
-		healthBar.step((healthBefore - player.getHealth()) / 100);
 	}
 
-	/**
-	 * Checks to see if game object g is within the bounds of the world. If not,
-	 * the speed of the object is multiplied by -1 in order to reflect it off
-	 * the walls
-	 * 
-	 * @param g
-	 *            (game object that is checked)
-	 * @param reflectionSpeed
-	 *            (speed to be multiplied by when object encounters wall)
-	 * @return
-	 */
+
 	private boolean inBounds(GameObject g, double reflectionSpeed) {
 		if (g.getPosX() > width || g.getPosX() < 0) {
 			g.setVelX(g.getVelX() * -1 * reflectionSpeed);
@@ -181,6 +150,7 @@ public class Game {
 		case K:
 			player.setXResistance(1);
 			player.setYResistance(1);
+			break;
 		default:
 			break;
 		}
@@ -247,21 +217,11 @@ public class Game {
 			return false;
 	}
 
-	/**
-	 * Sets score increment in game
-	 * 
-	 * @param a
-	 *            :score to be added if survived a step
-	 */
 	private void setScoreIncrement(int a) {
 		this.scoreIncrement = a;
 	}
 
-	/**
-	 * Removes asteroids if they leave the map
-	 * 
-	 * @param timeElapsed
-	 */
+
 	private void asteroidRemovalAndCollision(double timeElapsed) {
 		for (int i = 0; i < gameObjects.size(); i++) {
 			GameObject g = gameObjects.get(i);
@@ -274,12 +234,6 @@ public class Game {
 
 	}
 
-	/**
-	 * Sets up projectile firing for player and enemies
-	 * 
-	 * @param g
-	 * @param direction
-	 */
 	private void shoot(GameObject g, int direction) {
 		Lazor lazor = new Lazor((int) (g.getPosX()), (int) (g.getPosY()));
 		lazor.setVelY(direction * blasterSpeed);
@@ -287,10 +241,7 @@ public class Game {
 		gameObjects.add(lazor);
 	}
 
-	/**
-	 * Sets up the HUD for the games which includes health bar and scoreboard
-	 */
-	public void hud() {
+	private void hud() {
 		this.healthBar = new HealthBar(20, width);
 		gameGraphics.getChildren().add(healthBar.getShape());
 
@@ -298,27 +249,11 @@ public class Game {
 		gameGraphics.getChildren().add(score.getText());
 	}
 
-	/**
-	 * Removes game objects from object list and stops rendering it
-	 * 
-	 * @param g
-	 * @param index
-	 */
 	private void remove(GameObject g, int index) {
 		gameGraphics.getChildren().remove(g.getImage());
 		gameObjects.remove(index);
 	}
 
-	/**
-	 * Damages object as called
-	 * 
-	 * @param a:
-	 *            Gameobject possibly inflicting the object
-	 * @param b:
-	 *            Gameobject geing damaged
-	 * @param amount:
-	 *            Amount by which the object is damaged
-	 */
 	private void damageGameObject(GameObject a, GameObject b, double amount) {
 		if (collision(a.getBounds(), b.getBounds()) == true) {
 			if (a.getType() == 1 || a.getType() == 2) {
@@ -327,9 +262,7 @@ public class Game {
 		}
 	}
 
-	/**
-	 * Spawns asteroids, sets speeds
-	 */
+
 	private void asteroidSpawn() {
 		if (gameObjects.size() < 30 && gameStatus == 0) {
 			WeakEnemy a = new WeakEnemy((int) (Math.random() * 800), 0);
@@ -341,9 +274,39 @@ public class Game {
 			}
 		}
 	}
-	
-	private void skipToBoss(){
+
+	private void skipToBoss() {
 		this.gameStatus = 1;
+	}
+	
+	private void bossLevel(double timeElapsed){
+		if (gameStatus == 1) {
+			inBounds(drm1, enemyReflectSpeed);
+			for (int i = 0; i < gameObjects.size(); i++) {
+				GameObject g = gameObjects.get(i);
+				g.step(timeElapsed);
+				inBounds(g, enemyReflectSpeed);
+				damageGameObject(g, drm1, .1);
+				if (drm1.getHealth() <= 0) {
+					score.setScore(score.getScore() + BOSS_BONUS * this.scoreIncrement);
+					gameGraphics.getChildren().remove(drm1.getImage());
+					setScoreIncrement(0);
+					if (justDied == 0) {
+						justDied++;
+						gameGraphics.getChildren().add(goToEndScreen);
+					}
+				}
+			}
+			if (score.getScore() % 30 == 0 && drm1.isAlive()) {
+				shoot(drm1, -1);
+			}
+		}
+	}
+	
+	private void healthBarUpdate(){
+		score.setScore(score.getScore() + scoreIncrement);
+		double healthBefore = player.getHealth();
+		healthBar.step((healthBefore - player.getHealth()) / 100);
 	}
 
 }
