@@ -1,31 +1,39 @@
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
+
+/**
+ * Defines the lazor object which are projectiles the boss enemy and player shoot
+ * @author theodorefranceschi
+ *
+ */
 public class Lazor extends GameObject{
-	
+
 	protected double xResistance;
 	protected double yResistance;
-	//Player constructor that sets initial position
+	
+	/**
+	 * Constructor of Laser object aka Lazor
+	 * @param posX: initial x position of lazor
+	 * @param posY: initial y position of lazor
+	 */
 	public Lazor(int posX, int posY){
 		super(posX, posY);
 		this.type = 2;
+		
 		this.image = new Image("upLazor.png");
 		this.imageView = new ImageView(image);
 		this.imageView.setFitHeight(20);
-		//this.imageView.preserveRatioProperty();
+		
 		this.width = 10;
 		this.height = 100;
+		
 		this.imageView.setX(posX-width/2);
 		this.imageView.setY(posY-height/2);
 	}
 	
-	//Defines behavior of player object for each time increment
+	/**
+	 * Determines the status of the lazor at each time step
+	 */
 	public void step(double timeElapsed){
 		posX = posX + velX*timeElapsed;
 		posY = posY + velY*timeElapsed;
@@ -33,13 +41,17 @@ public class Lazor extends GameObject{
 		this.imageView.setY(posY-height/2);
 		}
 	
-	//Returns bounds of an object in an array (x1,x2,y1,y2)
+	/**
+	 * Returns the bounds of the lazor
+	 */
 	public double[] getBounds(){
 		double[] bounds = {posX-width/2,posX+width/2,posY-height/2,posY+height/2};
 		return bounds;
 	}
 	
-	//Returns type of game object 
+	/**
+	 * Returns type of the lazor(2)
+	 */
 	public int getType(){
 		return this.type;
 	}

@@ -7,19 +7,24 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import java.util.*;
 
+/**
+ * Game object builds the game and defines the leveling and mechanics
+ * @author theodorefranceschi
+ *
+ */
 public class Game {
-	protected int width;
-	protected int height;
-	public final static Image BACKGROUND_PICTURE = new Image("Space.jpg");
+	private int width;
+	private int height;
+	private final static Image BACKGROUND_PICTURE = new Image("Space.jpg");
 	private Scene myScene;
-	protected ImageView backgrndView = new ImageView();
+	private ImageView backgrndView = new ImageView();
 
 	private Player player;
 	private BossEnemy drm1;
 	private ImageView playerImage;
 	private Group gameGraphics = new Group();
 	private HealthBar healthBar;
-	protected ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+	private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
 
 	protected double playerReflectSpeed = 1;
 	protected double enemyReflectSpeed = 1;
@@ -29,6 +34,7 @@ public class Game {
 	protected int scoreIncrement = 1;
 	protected Button goToEndScreen = new Button("Game Over");
 	protected double blasterSpeed = -400;
+	protected int damageBy = 2;
 
 	private int BOSS_VERT_SPAWN = 250;
 	private int BOSS_HORIZ_SPEED = 50;
@@ -77,13 +83,12 @@ public class Game {
 	 *            time between steps
 	 */
 	public void step(double timeElapsed) {
-
+		double currentHealth = player.getHealth();
 		if (isAlive() == false & count == 0) {
 			gameGraphics.getChildren().add(goToEndScreen);
 			setScoreIncrement(0);
 			count++;
 		}
-
 		if (score.getScore() == ADVANCING_SCORE) {
 			drm1 = new BossEnemy(width / 2, BOSS_VERT_SPAWN);
 			drm1.setVelX(BOSS_HORIZ_SPEED);
@@ -93,8 +98,7 @@ public class Game {
 			asteroidRemovalAndCollision(timeElapsed);
 			this.gameStatus = 1;
 		}
-
-		healthBarUpdate();
+		score.setScore(score.getScore() + scoreIncrement);
 		
 		asteroidSpawn();
 		bossLevel(timeElapsed);
@@ -102,6 +106,7 @@ public class Game {
 		
 		inBounds(player, 1);
 		player.step(timeElapsed);
+		healthBar.step((currentHealth - player.getHealth()) / 100);
 	}
 
 
@@ -151,6 +156,15 @@ public class Game {
 			player.setXResistance(1);
 			player.setYResistance(1);
 			break;
+			
+		case O:
+			skipToBoss();
+			break;
+			
+		case L:
+			setDamageBy(0);
+			break;
+			
 		default:
 			break;
 		}
@@ -228,7 +242,7 @@ public class Game {
 			if (inBounds(g, 1) == false && (g.getType() == 1 || g.getType() == 2)) {
 				remove(g, i);
 			}
-			damageGameObject(g, player, 2);
+			damageGameObject(g, player, damageBy);
 			g.step(timeElapsed);
 		}
 
@@ -241,7 +255,10 @@ public class Game {
 		gameObjects.add(lazor);
 	}
 
-	private void hud() {
+	/**
+	 * Sets up the hud of the game
+	 */
+	public void hud() {
 		this.healthBar = new HealthBar(20, width);
 		gameGraphics.getChildren().add(healthBar.getShape());
 
@@ -262,7 +279,6 @@ public class Game {
 		}
 	}
 
-
 	private void asteroidSpawn() {
 		if (gameObjects.size() < 30 && gameStatus == 0) {
 			WeakEnemy a = new WeakEnemy((int) (Math.random() * 800), 0);
@@ -276,6 +292,11 @@ public class Game {
 	}
 
 	private void skipToBoss() {
+		drm1 = new BossEnemy(width / 2, BOSS_VERT_SPAWN);
+		drm1.setVelX(BOSS_HORIZ_SPEED);
+		
+		gameObjects.add(drm1);
+		gameGraphics.getChildren().add(drm1.getImage());
 		this.gameStatus = 1;
 	}
 	
@@ -303,10 +324,7 @@ public class Game {
 		}
 	}
 	
-	private void healthBarUpdate(){
-		score.setScore(score.getScore() + scoreIncrement);
-		double healthBefore = player.getHealth();
-		healthBar.step((healthBefore - player.getHealth()) / 100);
+	private void setDamageBy(int a){
+		this.damageBy = a;
 	}
-
 }

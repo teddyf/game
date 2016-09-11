@@ -7,9 +7,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.*;
-
+/**
+ * Weak enemy object are the asteroids that populate the screen during the first level
+ * This class defines their movement, rendering, and variables
+ * @author theodorefranceschi
+ *
+ */
 public class WeakEnemy extends GameObject {
 
+	/**
+	 * Constructor that sets initial position of weak enemy
+	 * @param posX: initial x position
+	 * @param posY: initial y position
+	 */
 	public WeakEnemy(int posX, int posY) {
 		super(posX, posY);
 		this.type = 1;
@@ -23,24 +33,28 @@ public class WeakEnemy extends GameObject {
 		this.imageView.setY(posY-height/2);
 	}
 
+	/**
+	 * Updates position and rendering of enemy during a given time step
+	 */
 	public void step(double timeElapsed) {
-
-		//updates position of weak enemy object
 		posX += velX * timeElapsed;
 		posY += velY * timeElapsed;
 		
-		//animates position of object
 		this.imageView.setX(posX-width/2);
 		this.imageView.setY(posY-height/2);
 	}
 
-
-	// Returns bounds of an object in an array (x1,x2,y1,y2)
+	/**
+	 * Returns the bounds of an enemy object
+	 */
 	public double[] getBounds() {
 		double[] bounds = { posX - width / 2, posX + width / 2, posY - height / 2, posY + height / 2 };
 		return bounds;
 	}
 
+	/**
+	 * Returns the type of an objects
+	 */
 	public int getType(){
 		return this.type;
 	}

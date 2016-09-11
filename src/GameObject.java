@@ -1,5 +1,11 @@
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+/**
+ * Abstract class that defines the variables and methods of any game object
+ * @author theodorefranceschi
+ *
+ */
 public abstract class GameObject {
 	protected double posX;
 	protected double posY;

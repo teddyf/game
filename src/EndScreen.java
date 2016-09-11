@@ -7,24 +7,29 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+/**
+ * Builds the end screen scene
+ * @author theodorefranceschi
+ *
+ */
 public class EndScreen {
-	Text t = new Text();
-	int height;
-	int width;
+	private Text t = new Text();
+	private int height;
+	private int width;
 	private Scene myScene;
 	private ImageView backGroundImage;
 	private Group group;
-	ImageView backgrndImage;
-	Button tryAgain;
-	int score;
+	private int score;
 	private int WIN_LOSS_THRESHOLD = 5000;
+	private final static Image BACKGROUND_PICTURE = new Image("Space.jpg");
 	
-	volatile boolean exitMenu;
-	
-	boolean goToGame;
-	
-	public final static Image BACKGROUND_PICTURE = new Image("Space.jpg");
-	
+	/**
+	 * Constructs end screen scene with set width, height, and score
+	 * @param width: width of end screen
+	 * @param height: height of end screen
+	 * @param score: displays score at end game
+	 * @return
+	 */
 	public Scene init(int width, int height, int score){
 		this.height = height;
 		this.width = width;
@@ -34,7 +39,19 @@ public class EndScreen {
 		backGroundImage.setFitHeight(600);
 		backGroundImage.setFitWidth(800);
 		
-		//Sets end screen title
+		setMessage();
+
+		group.getChildren().add(backGroundImage);
+		group.getChildren().add(t);
+		
+		this.myScene = new Scene(group,width,height);	
+		return this.myScene;
+	}
+	
+	/**
+	 * Sets the end screen message
+	 */
+	private void setMessage(){
 		String message = new String();
 		if(score > WIN_LOSS_THRESHOLD){
 			message = "Good Job!!!";
@@ -47,18 +64,5 @@ public class EndScreen {
 		t.setFill(Color.RED);
 		t.setLayoutX(0.0+width/2-150);
 		t.setLayoutY(0.0+height/3);
-		
-		this.tryAgain = new Button("Try Again?");
-		tryAgain.setLayoutX(this.width/2-25);
-		tryAgain.setLayoutY(this.height/2 + 100);
-		group.getChildren().add(backGroundImage);
-		group.getChildren().add(tryAgain);
-		group.getChildren().add(t);
-		
-		this.myScene = new Scene(group,width,height);
-		
-		return this.myScene;
 	}
-	
-
 }

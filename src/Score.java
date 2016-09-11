@@ -1,11 +1,16 @@
  import javafx.scene.paint.Color;
  import javafx.scene.text.*;
- 
+
+ /**
+  * Score object displays score of player during game
+  * @author theodorefranceschi
+  *
+  */
 public class Score {
 	private Text scoreShown;
 	private int score;
-	int posX;
-	int posY;
+	private int posX;
+	private int posY;
 	public Score(int score,int posX, int posY){
 		this.score = score;
 		this.scoreShown = new Text();

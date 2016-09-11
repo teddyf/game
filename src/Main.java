@@ -1,53 +1,65 @@
-import java.awt.Color;
-
 import javafx.animation.*;
 import javafx.scene.*;
-import javafx.scene.image.*;
 import javafx.stage.*;
 import javafx.util.*;
 import javafx.application.*;
-import javafx.scene.control.*;
 
+/**
+ * The runner class.  To start the game run this class
+ * @author theodorefranceschi
+ *
+ */
 public class Main extends Application{
-	public static final int WIDTH = 800;
-	public static final int HEIGHT = 600;
-	public static final int FRAMES_PER_SECOND = 60;
+	private static final int WIDTH = 800;
+	private static final int HEIGHT = 600;
+	private static final int FRAMES_PER_SECOND = 60;
 	private static final int DELAY_IN_MILLISECONDS = 1000/FRAMES_PER_SECOND;
 	private static final double DELAY_IN_SECONDS = 1.0/FRAMES_PER_SECOND;
-	
-	private int gameStatus;
-	
 	private Game myGame;
-	Scene scene;
+	private int gameStatus;
+	private Scene scene;
 	
 	@Override
+	/**
+	 * Starts the game and goes to the main menu.  Once start button is pressed game proceeds to first stage
+	 */
 	public void start(Stage s){
 		
 		this.gameStatus = 0;
 		myGame = new Game();
 		Menu menu = new Menu();
 		Scene scene = menu.init(WIDTH, HEIGHT);
+		
 		s.setTitle("Game");
 		s.setScene(scene);
 		s.show();
 		
-		//Handles start button on menu screen
 		menu.start.setOnAction((event) -> {
 			playGame(s);
 		});
 			
 	}
 	
-	//Checks status of game (menu, playing, end)
+	/**
+	 * Sets status of the game
+	 * @param status: status of the game
+	 */
 	public void setGameStatus(int status){
 		this.gameStatus = status;
 	}
 	
+	/**
+	 * Main method
+	 * @param args
+	 */
 	public static void main(String[] args){
 		launch(args);
 	}
 	
-	//Handles scene animation of actual gameplay
+	/**
+	 * Starts the first stage of the game
+	 * @param s
+	 */
 	public void playGame(Stage s){
 		scene = myGame.init(WIDTH, HEIGHT);
 		s.setScene(scene);
@@ -61,18 +73,18 @@ public class Main extends Application{
 		
 		KeyFrame frame = new KeyFrame(Duration.millis(DELAY_IN_MILLISECONDS),
 				e -> myGame.step(DELAY_IN_SECONDS));
+		
 		Timeline animate = new Timeline();
+		
 		animate.setCycleCount(Timeline.INDEFINITE);
 		animate.getKeyFrames().add(frame);
 		animate.play();
-		/*
-		while(myGame.isAlive()==true){
-			System.out.println("It is alive!!!");
-		}
-		*/
 	}
 	
-	//Handles end scene animation
+	/**
+	 * Moves game to end screen scene
+	 * @param s
+	 */
 	public void endGame(Stage s){
 		EndScreen end = new EndScreen();
 		scene = end.init(WIDTH,HEIGHT,myGame.score.getScore());
