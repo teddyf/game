@@ -27,7 +27,3 @@ Cheat key List:
 Bugs: Sometimes player can't shoot in a rendition a week ago but I think I squashed that bug. Player shots can damage its own ship if the ship is moving.  This is not common but it does occur. 
 
 All in all, I really enjoyed this assignment.  Wasn't too challenging and was rather fun.  I wish we were given a better example in order to make learning javafx easier.  
-
-README.md
-
-your impressions of the assignment to help improve it in the future
