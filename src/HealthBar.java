@@ -9,6 +9,7 @@ import javafx.scene.Group;
  
  /**
   * Health bar object that displays player health as a health bar on the screen
+  * Depends on javafx tools.  If not tinkered there will be no issues.  IF tinkered but conventions are followed then it should be fine.
   * @author theodorefranceschi
   *
   */

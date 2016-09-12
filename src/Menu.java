@@ -9,6 +9,8 @@ import javafx.scene.text.Text;
 
 /**
  * Class which builds the menu screen
+ * Depends on scene and javafx tools
+ * As said so many times now, no tinkering no problems, tinkering smartly means no problems
  * @author theodorefranceschi
  *
  */

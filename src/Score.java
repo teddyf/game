@@ -3,6 +3,8 @@
 
  /**
   * Score object displays score of player during game
+  * Depends on javafx tools
+  * Easiest solution is just not to touch my code.  Should work unless someone chooses to screw with it as in delete a semicolon or something dumb
   * @author theodorefranceschi
   *
   */

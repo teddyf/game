@@ -10,6 +10,8 @@ import javafx.scene.shape.*;
 /**
  * Weak enemy object are the asteroids that populate the screen during the first level
  * This class defines their movement, rendering, and variables
+ * Shouldn't fail unless you don't initialize it wrong (as in inputting a string instead of an int or giving no values)
+ * Depends on GameObject (extends it)
  * @author theodorefranceschi
  *
  */

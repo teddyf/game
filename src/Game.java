@@ -9,6 +9,8 @@ import java.util.*;
 
 /**
  * Game object builds the game and defines the leveling and mechanics
+ * Depends on all game objects 
+ * Assumes user doesn't tinker with files, and if he/she tinkers follows basic javafx rules.
  * @author theodorefranceschi
  *
  */

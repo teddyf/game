@@ -9,6 +9,9 @@ import javafx.scene.text.Text;
 
 /**
  * Builds the end screen scene
+ * Depends on Scene from javafx
+ * Assumes that you intialize it properly and graphics are handled appropriately.  As long as you play the game and follow standard conventions for javafx,
+ * you will not encounter any issues.  
  * @author theodorefranceschi
  *
  */

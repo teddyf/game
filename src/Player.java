@@ -2,6 +2,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 /**
  * Player object defines variables, methods, and graphics of the player
+ * Shouldn't fail unless you don't initialize it wrong (as in inputting a string instead of an int or giving no values)
+ * Depends on GameObject (extends it)
  * @author theodorefranceschi
  *
  */

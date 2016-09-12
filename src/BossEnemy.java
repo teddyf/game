@@ -2,7 +2,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 /**
- * Boss object which is the main enemy in the final stage of the game
+ * Boss object which is the main enemy in the final stage of the game.
+ * Shouldn't fail unless you don't initialize it wrong (as in inputting a string instead of an int or giving no values)
+ * Depends on GameObject (extends it) 
  * @author theodorefranceschi
  *
  */

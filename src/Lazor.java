@@ -3,6 +3,8 @@ import javafx.scene.image.ImageView;
 
 /**
  * Defines the lazor object which are projectiles the boss enemy and player shoot
+ * Shouldn't fail unless you don't initialize it wrong (as in inputting a string instead of an int or giving no values)
+ * Depends on GameObject (extends it)
  * @author theodorefranceschi
  *
  */

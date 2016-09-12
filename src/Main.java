@@ -7,7 +7,8 @@ import javafx.application.*;
 /**
  * The runner class.  To start the game run this class
  * @author theodorefranceschi
- *
+ *Depends on game and javafx
+ *If not tinkered or if tinkering is done within rules of javafx then you should be fine
  */
 public class Main extends Application{
 	private static final int WIDTH = 800;
