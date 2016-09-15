@@ -3,6 +3,8 @@ import javafx.scene.image.ImageView;
 
 
 /**
+ * Part of game master piece!!!
+ * 
  * Abstract class that defines the variables and methods of any game object
  * Depends on javafx tools possibly.
  * This is needed for all game objects.

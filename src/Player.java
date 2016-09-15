@@ -3,6 +3,8 @@ import javafx.scene.image.ImageView;
 
 
 /**
+ * Part of Coding Master Piece!!!
+ * 
  * Player object defines variables, methods, and graphics of the player
  * Shouldn't fail unless you don't initialize it wrong (as in inputting a string instead of an int
  * or giving no values)
